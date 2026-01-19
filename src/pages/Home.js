@@ -3,7 +3,7 @@ import SearchBar from "../components/SearchBar/SearchBar";
 import SearchResults from "../components/SearchResults/SearchResults";
 import { useFetch } from "../hooks/useFetch";
 
-const Home = ({ onAddToLibrary }) => {
+const Home = () => {
   const [artist, setArtist] = useState("Coldplay");
 
   const url = useMemo(() => {
@@ -14,13 +14,12 @@ const Home = ({ onAddToLibrary }) => {
 
   const { data, loading, error, refetch } = useFetch(url);
 
-  // Transformar respuesta (álbumes) a "canciones" manejables por la app
   const songs = useMemo(() => {
     if (!data || !data.album) return [];
 
     return data.album.map((album) => ({
-      id: album.idAlbum,            // se usa en /song/:id
-      title: album.strAlbum,        // lo mostramos como "título"
+      id: album.idAlbum,
+      title: album.strAlbum,
       artist: album.strArtist,
       album: album.strAlbum,
     }));
@@ -39,11 +38,10 @@ const Home = ({ onAddToLibrary }) => {
         </div>
       )}
 
-      {!loading && !error && (
-        <SearchResults songs={songs} onAddToLibrary={onAddToLibrary} />
-      )}
+      {!loading && !error && <SearchResults songs={songs} />}
     </div>
   );
 };
 
 export default Home;
+

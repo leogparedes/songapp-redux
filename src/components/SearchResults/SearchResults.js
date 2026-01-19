@@ -2,7 +2,17 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Wrapper, Title, List, Card, ActionButton } from "./styles";
 
-const SearchResults = ({ songs, onAddToLibrary }) => {
+// ✅ Redux
+import { useDispatch } from "react-redux";
+import { addSong } from "../../redux/libraryActions";
+
+const SearchResults = ({ songs }) => {
+  const dispatch = useDispatch();
+
+  const handleAdd = (song) => {
+    dispatch(addSong(song));
+  };
+
   return (
     <Wrapper>
       <Title>Resultados de búsqueda</Title>
@@ -21,7 +31,7 @@ const SearchResults = ({ songs, onAddToLibrary }) => {
 
               <br />
 
-              <ActionButton onClick={() => onAddToLibrary(song)} $variant="success">
+              <ActionButton onClick={() => handleAdd(song)} $variant="success">
                 Agregar a mi biblioteca
               </ActionButton>
             </Card>
