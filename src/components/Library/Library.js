@@ -1,17 +1,12 @@
 import React from "react";
 import { Wrapper, Title, List, Card, ActionButton } from "./styles";
 
-// ✅ Redux
 import { useSelector, useDispatch } from "react-redux";
-import { removeSong } from "../../redux/libraryActions";
+import { removeSong } from "../../redux/slices/librarySlice";
 
 const Library = () => {
-  const songs = useSelector((state) => state); 
+  const songs = useSelector((state) => state.library);
   const dispatch = useDispatch();
-
-  const handleRemove = (songId) => {
-    dispatch(removeSong(songId));
-  };
 
   return (
     <Wrapper>
@@ -28,7 +23,7 @@ const Library = () => {
               <p>Álbum: {song.album}</p>
 
               <ActionButton
-                onClick={() => handleRemove(song.id)}
+                onClick={() => dispatch(removeSong(song.id))}
                 $variant="danger"
               >
                 Eliminar
@@ -42,6 +37,7 @@ const Library = () => {
 };
 
 export default Library;
+
 
 
 

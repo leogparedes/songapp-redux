@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import { Form, Input, Button } from "./styles";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSongs } from "../../redux/slices/searchSlice";
 
-const SearchBar = ({ onSearch }) => {
+const SearchBar = () => {
   const [term, setTerm] = useState("");
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => state.search.loading);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!term.trim()) return;
-    onSearch(term.trim());
+    dispatch(fetchSongs(term.trim()));
   };
 
   return (
@@ -17,9 +21,12 @@ const SearchBar = ({ onSearch }) => {
         placeholder="Escribe un artista... (ej: Oasis)"
         value={term}
         onChange={(e) => setTerm(e.target.value)}
-        $hasValue={term.trim().length > 0}   // ✅ prop dinámica
+        $hasValue={term.trim().length > 0}
+        disabled={loading}
       />
-      <Button type="submit">Buscar</Button>
+      <Button type="submit" disabled={loading}>
+        {loading ? "Buscando..." : "Buscar"}
+      </Button>
     </Form>
   );
 };

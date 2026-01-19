@@ -2,26 +2,41 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Wrapper, Title, List, Card, ActionButton } from "./styles";
 
-// ✅ Redux
-import { useDispatch } from "react-redux";
-import { addSong } from "../../redux/libraryActions";
+import { useDispatch, useSelector } from "react-redux";
+import { addSong } from "../../redux/slices/librarySlice";
+import { fetchSongs } from "../../redux/slices/searchSlice";
 
-const SearchResults = ({ songs }) => {
+const SearchResults = () => {
   const dispatch = useDispatch();
 
-  const handleAdd = (song) => {
-    dispatch(addSong(song));
+  const { results, loading, error, lastQuery } = useSelector(
+    (state) => state.search
+  );
+
+  const handleRetry = () => {
+    if (lastQuery) dispatch(fetchSongs(lastQuery));
   };
 
   return (
     <Wrapper>
       <Title>Resultados de búsqueda</Title>
 
-      {songs.length === 0 ? (
-        <p>No hay resultados.</p>
-      ) : (
+      {loading && <p>Cargando...</p>}
+
+      {error && (
+        <div>
+          <p>Hubo un problema al cargar los datos: {error}</p>
+          <button onClick={handleRetry} disabled={!lastQuery}>
+            Reintentar
+          </button>
+        </div>
+      )}
+
+      {!loading && !error && results.length === 0 && <p>No hay resultados.</p>}
+
+      {!loading && !error && results.length > 0 && (
         <List>
-          {songs.map((song) => (
+          {results.map((song) => (
             <Card key={song.id}>
               <h3>{song.title}</h3>
               <p>Artista: {song.artist}</p>
@@ -31,7 +46,10 @@ const SearchResults = ({ songs }) => {
 
               <br />
 
-              <ActionButton onClick={() => handleAdd(song)} $variant="success">
+              <ActionButton
+                onClick={() => dispatch(addSong(song))}
+                $variant="success"
+              >
                 Agregar a mi biblioteca
               </ActionButton>
             </Card>
@@ -43,3 +61,4 @@ const SearchResults = ({ songs }) => {
 };
 
 export default SearchResults;
+

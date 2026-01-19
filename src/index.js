@@ -7,7 +7,6 @@ import { ThemeProvider } from "styled-components";
 import theme from "./styles/theme";
 import GlobalStyles from "./styles/GlobalStyles";
 
-// ✅ Redux
 import { Provider } from "react-redux";
 import store from "./redux/store";
 
@@ -22,7 +21,5 @@ root.render(
     </Provider>
   </BrowserRouter>
 );
-
-
 
 
